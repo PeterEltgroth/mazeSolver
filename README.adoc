@@ -13,5 +13,5 @@ Maze Solvers written in various languages.
 
 First implemention:
 
-link:dotnet/README[.NET Core C#]
+link:dotNet/README[.NET Core C#]
  
