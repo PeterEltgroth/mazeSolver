@@ -43,7 +43,7 @@ Application started. Press Ctrl+C to shut down.
 . Execute 
 [source,]
 ----
--> `http -f localhost:8080/solveMaze file@../input/maze1.txt | jq -r '.solution'`
+-> http -f localhost:8080/solveMaze file@../input/maze1.txt | jq -r '.solution'
 ----
 
 === curl
@@ -51,7 +51,7 @@ Application started. Press Ctrl+C to shut down.
 ==== Execute
 [source,]
 ----
--> `curl -F "file=@../path/to/maze.txt" localhost:8080/solveMaze`
+-> curl -F "file=@../path/to/maze.txt" localhost:8080/solveMaze
 ----
 ==== To see the solution map nicely formatted (in *nix terminals)
 . Install https://stedolan.github.io/jq/download/[jq]
