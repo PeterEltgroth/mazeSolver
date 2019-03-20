@@ -13,7 +13,6 @@
 
 [source,]
 ----
-
 -> dotnet --version
 2.2.105
 ----
@@ -22,7 +21,6 @@
 
 [source,]
 ----
-
 -> dotnet run
 ...
 Hosting environment: Development
@@ -32,17 +30,45 @@ Application started. Press Ctrl+C to shut down.
 ----
 
 == Hitting the API
+
 === HTTPie
 ==== Get https://httpie.org/doc#installation[HTTPie]
-==== -> `http -f localhost:8080/solveMaze file@../input/maze1.txt`
+==== Execute
+[source,]
+----
+-> http -f localhost:8080/solveMaze file@../input/maze1.txt
+----
+==== To see the solution map nicely formatted (in *nix terminals)
+. Install https://stedolan.github.io/jq/download/[jq]
+. Execute 
+[source,]
+----
+-> `http -f localhost:8080/solveMaze file@../input/maze1.txt | jq -r '.solution'`
+----
+
 === curl
 ===== Get https://curl.haxx.se/download.html[curl]
-==== -> `curl -F "file=@../path/to/maze.txt" localhost:8080/solveMaze`
+==== Execute
+[source,]
+----
+-> `curl -F "file=@../path/to/maze.txt" localhost:8080/solveMaze`
+----
+==== To see the solution map nicely formatted (in *nix terminals)
+. Install https://stedolan.github.io/jq/download/[jq]
+. Execute 
+[source,]
+----
+-> curl -F "file=@../path/to/maze.txt" localhost:8080/solveMaze | jq -r '.solution'
+----
+
 === Postman
 ==== Get https://www.getpostman.com/downloads/[Postman]
 ==== https://learning.getpostman.com/docs/postman/collections/data_formats/#importing-postman-data[Import] the collection from `postman/Maze.postman_collection.json`
 ==== Open the `POST solveMaze` call
 ==== Switch to the https://learning.getpostman.com/docs/postman/sending_api_requests/requests/#request-body[Body tab],click _Choose Files_, select the maze file, and click _Send_
+
+== Run with Minikube
+Coming soon
 
 == References
 === Algorithm
