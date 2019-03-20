@@ -58,7 +58,7 @@ namespace dotNet.Controllers {
       Solution solution = _mazeService.solve (map);
 
       if (0 == solution.steps) {
-        return Ok( new { info = "Maze has no solution", steps = solution.steps, solution = solution.solution });
+        return Ok( new { info = "Maze has no solution!", original = solution.solution });
       }
 
       return Ok( new { steps = solution.steps, solution = solution.solution });

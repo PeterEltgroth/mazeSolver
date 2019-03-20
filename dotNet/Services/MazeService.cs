@@ -25,10 +25,6 @@ namespace dotNet.Services {
         private static char PATH = '@';
         private enum DIRECTION { UP, LEFT, DOWN, RIGHT };
 
-        private Node start, end;
-        private List<Node> openNodes = new List<Node> ();
-        private List<Node> closedNodes = new List<Node> ();
-
         private readonly ILogger _logger;
 
         public MazeService (ILogger<MazeService> logger) {
@@ -53,79 +49,43 @@ namespace dotNet.Services {
         public Solution solve (string strMap) {
             char[][] map = split (strMap);
             long maxNodes = map.Length * map[0].Length;
+            Node start, end;
 
-            // List<Node> openNodes = new List<Node> ();
-            // List<Node> closedNodes = new List<Node> ();
+            List<Node> openNodes = new List<Node> ();
+            List<Node> closedNodes = new List<Node> ();
 
-            this.start = getFirstNodeOfType (map, START);
-            this.end = getFirstNodeOfType (map, END);
-            _logger.LogInformation ($"Start node: {this.start.ToString()} :{Environment.NewLine}End node: {this.end.ToString()}");
+            start = getFirstNodeOfType (map, START);
+            end = getFirstNodeOfType (map, END);
+            _logger.LogInformation ($"Start node: {start.ToString()} :{Environment.NewLine}End node: {end.ToString()}");
 
             Node current = start;
-            this.openNodes.Add (start);
+            openNodes.Add (start);
 
-            while (!current.Equals (this.end) &&
-                this.openNodes.Count > 0 &&
-                ((this.closedNodes.Count + this.openNodes.Count) < maxNodes)) {
-                this.closedNodes.Add (current);
-                this.openNodes.Remove (current);
+            while (!current.Equals (end) &&
+                    openNodes.Count > 0 &&
+                    ((closedNodes.Count + openNodes.Count) < maxNodes)
+                ) {
 
-                this.openNodes.AddRange (getAdjacentNodes (current, map));
                 current = getLowestScoreNode (openNodes, current);
-            }
-
-            if (current.Equals (this.end)) {
                 closedNodes.Add (current);
                 openNodes.Remove (current);
-            } else {
-                // No solution found
-                return null;
+
+                List<Node> adjacentNodes = getAdjacentNodes (end, current, map);
+                foreach (Node node in adjacentNodes) {
+                    if (node != null && !closedNodes.Contains (node)) {
+                        addToOpenNodes(openNodes, node);
+                    }
+                }
             }
 
-            Solution solution = getSolution (closedNodes, map);
+            if (current.Equals (end)) {
+                closedNodes.Add (current);
+                openNodes.Remove (current);
+            }
+
+            Solution solution = getSolution (closedNodes, start, end, map);
 
             return solution;
-        }
-
-        private Solution getSolution (List<Node> nodes, char[][] map) {
-            nodes.Reverse ();
-            Node previous = null;
-            int steps = 0;
-    
-            if (nodes.Contains(this.start) && nodes.Contains(this.end)){
-                // Replace `.` with `@`
-                foreach (Node node in nodes) {
-                    // End node
-                    if (node.Equals(this.end)) {
-                        _logger.LogDebug ($"END node '{node.ToShortString()}'");
-                        steps++;
-                        previous = node;
-                    } else if (node.Equals(this.start)) {
-                        _logger.LogDebug ($"START node '{node.ToShortString()}'");
-                        break;
-                    } else if (node.Equals (previous.parent)) {
-                        _logger.LogDebug ($"PATH node '{node.ToString()}, swithcing char to '@'");
-                        map[node.y][node.x] = PATH;
-                        steps++;
-                        previous = node;
-                    // Start node
-                    }
-                    _logger.LogDebug ($"IGNORE Node '{node.ToIdString()}', not start, end or on path");
-                }
-            }
-
-            // Convert map back to String
-            StringBuilder sb = new StringBuilder ();
-            for (int i = 0; i < map.Length; i++) {
-                sb.Append (new string(map[i]));
-                if (i < map.Length - 1) {
-                    sb.Append (CR_NL);
-                }
-            }
-
-            _logger.LogDebug ($"Solution: steps {steps}, map: {Environment.NewLine}{sb.ToString()}");
-
-            return new Solution (steps, sb.ToString ());
         }
 
         private Node getLowestScoreNode (List<Node> nodes, Node current) {
@@ -147,35 +107,32 @@ namespace dotNet.Services {
             return lowest;
         }
 
-        private List<Node> getAdjacentNodes (Node current, char[][] map) {
+        private List<Node> getAdjacentNodes (Node end, Node current, char[][] map) {
             var nodes = new List<Node> ();
-            addNode (nodes, getNode (map, current, DIRECTION.UP));
-            addNode (nodes, getNode (map, current, DIRECTION.LEFT));
-            addNode (nodes, getNode (map, current, DIRECTION.DOWN));
-            addNode (nodes, getNode (map, current, DIRECTION.RIGHT));
+            nodes.Add (getNode (map, end, current, DIRECTION.UP));
+            nodes.Add (getNode (map, end, current, DIRECTION.LEFT));
+            nodes.Add (getNode (map, end, current, DIRECTION.DOWN));
+            nodes.Add (getNode (map, end, current, DIRECTION.RIGHT));
 
             return nodes;
         }
 
-        private void addNode (List<Node> nodes, Node node) {
-            if (node != null) {
-                Node existing = openNodes.Find (a => a.Equals (node));
-
-                if (existing != null) {
-                    _logger.LogDebug ($"Found existing {existing.ToString()}");
-                    // If the existing `f` is higher than this new node, overwrite
-                    if (existing.f > node.f) {
-                        _logger.LogDebug ($"UPDATE NODE from: {Environment.NewLine}{existing.ToString()}{Environment.NewLine}to: {Environment.NewLine}{node.ToString()}'");
-                        existing.f = node.f;
-                        existing.parent = node.parent;
-                    }
-                } else {
-                    _logger.LogDebug ($"ADD NODE: {node.ToString()}");
-                    nodes.Add (node);
+        private void addToOpenNodes (List<Node> nodes, Node node) {
+            Node existing = nodes.Find (a => a.Equals (node));
+            if (existing != null) {
+                _logger.LogDebug ($"Found existing {existing.ToString()}");
+                // If the existing `f` is higher than this new node, overwrite
+                if (existing.f > node.f) {
+                    _logger.LogDebug ($"UPDATE NODE from: {Environment.NewLine}{existing.ToString()}{Environment.NewLine}to: {Environment.NewLine}{node.ToString()}'");
+                    existing.f = node.f;
+                    existing.parent = node.parent;
                 }
+            } else {
+                _logger.LogDebug ($"ADD NODE: {node.ToString()}");
+                nodes.Add (node);
             }
         }
-        private Node getNode (char[][] map, Node current, DIRECTION direction) {
+        private Node getNode (char[][] map, Node end, Node current, DIRECTION direction) {
             Node node = null;
             int maxX = map[0].Length;
             int maxY = map.Length;
@@ -221,7 +178,7 @@ namespace dotNet.Services {
                     }
 
                     // Use Manhatten/city block distance
-                    int h = Math.Abs (this.end.x - nextX) + Math.Abs (this.end.y - nextY);
+                    int h = Math.Abs (end.x - nextX) + Math.Abs (end.y - nextY);
                     node = new Node (val, nextX, nextY, h, current);
                     _logger.LogInformation ($"CREATED node: {node.ToString()}");
                 } catch (IndexOutOfRangeException e) {
@@ -233,6 +190,47 @@ namespace dotNet.Services {
             }
 
             return node;
+        }
+
+        private Solution getSolution (List<Node> nodes, Node start, Node end, char[][] map) {
+            nodes.Reverse ();
+            Node previous = null;
+            int steps = 0;
+    
+            if (nodes.Contains(start) && nodes.Contains(end)){
+                // Replace `.` with `@`
+                foreach (Node node in nodes) {
+                    // End node
+                    if (node.Equals(end)) {
+                        _logger.LogDebug ($"END node '{node.ToShortString()}'");
+                        steps++;
+                        previous = node;
+                    } else if (node.Equals(start)) {
+                        _logger.LogDebug ($"START node '{node.ToShortString()}'");
+                        break;
+                    } else if (node.Equals (previous.parent)) {
+                        _logger.LogDebug ($"PATH node '{node.ToString()}, swithcing char to '@'");
+                        map[node.y][node.x] = PATH;
+                        steps++;
+                        previous = node;
+                    // Start node
+                    }
+                    _logger.LogDebug ($"IGNORE Node '{node.ToIdString()}', not start, end or on path");
+                }
+            }
+
+            // Convert map back to String
+            StringBuilder sb = new StringBuilder ();
+            for (int i = 0; i < map.Length; i++) {
+                sb.Append (new string(map[i]));
+                if (i < map.Length - 1) {
+                    sb.Append (CR_NL);
+                }
+            }
+
+            _logger.LogDebug ($"Solution: steps {steps}, map: {Environment.NewLine}{sb.ToString()}");
+
+            return new Solution (steps, sb.ToString ());
         }
 
         private Node getFirstNodeOfType (char[][] map, char type) {

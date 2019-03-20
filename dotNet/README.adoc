@@ -1,0 +1,56 @@
+= dotNet Maze Solver
+
+:doctype: article
+:encoding: utf-8
+:lang: en
+:toc: left
+:numbered:
+
+== Running
+=== Command Line / Terminal
+==== Install https://dotnet.microsoft.com/download[.NET Core 2.2]
+==== Confirm Installation
+
+[source,]
+----
+
+-> dotnet --version
+2.2.105
+----
+
+==== Run
+
+[source,]
+----
+
+-> dotnet run
+...
+Hosting environment: Development
+Content root path: /Volumes/home/Users/peltgroth/dev/opensource/mazeSolver/dotNet
+Now listening on: http://localhost:8080
+Application started. Press Ctrl+C to shut down.
+----
+
+== Hitting the API
+=== HTTPie
+==== Get https://httpie.org/doc#installation[HTTPie]
+==== -> `http -f localhost:8080/solveMaze file@../input/maze1.txt`
+=== curl
+===== Get https://curl.haxx.se/download.html[curl]
+==== -> `curl -F "file=@../path/to/maze.txt" localhost:8080/solveMaze`
+=== Postman
+==== Get https://www.getpostman.com/downloads/[Postman]
+==== https://learning.getpostman.com/docs/postman/collections/data_formats/#importing-postman-data[Import] the collection from `postman/Maze.postman_collection.json`
+==== Open the `POST solveMaze` call
+==== Switch to the https://learning.getpostman.com/docs/postman/sending_api_requests/requests/#request-body[Body tab],click _Choose Files_, select the maze file, and click _Send_
+
+== References
+=== Algorithm
+. https://en.wikipedia.org/wiki/Tree_traversal[Wikipedia: Tree traversal]
+. https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode[Wikipedia: A* search algorithm]
+. https://www.raywenderlich.com/3016-introduction-to-a-pathfinding[Ray Wenderlich: Introduction to A* Pathfinding]
+. http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#S7[Amit Patel: A*’s Use of the Heuristic]
+
+=== Deployment
+. https://itnext.io/running-asp-net-core-on-minikube-ad69472c4c95[Running ASP.NET Core on minikue]
+. https://docs.docker.com/engine/examples/dotnetcore/[Dockerize a .Net Core application]

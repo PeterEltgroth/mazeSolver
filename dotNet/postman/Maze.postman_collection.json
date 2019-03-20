@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "425bbe36-59e5-4b31-81d5-7ace35ae4590",
+		"name": "Maze",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "solveMaze",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"description": "The Maze",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/solveMaze",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"solveMaze"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
