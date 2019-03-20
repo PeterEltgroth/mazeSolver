@@ -10,23 +10,15 @@
 === Command Line / Terminal
 ==== Install https://dotnet.microsoft.com/download[.NET Core 2.2]
 ==== Confirm Installation
-
 [source,]
 ----
--> dotnet --version
-2.2.105
+dotnet --version
 ----
 
 ==== Run
-
 [source,]
 ----
--> dotnet run
-...
-Hosting environment: Development
-Content root path: /Volumes/home/Users/peltgroth/dev/opensource/mazeSolver/dotNet
-Now listening on: http://localhost:8080
-Application started. Press Ctrl+C to shut down.
+dotnet run
 ----
 
 == Hitting the API
@@ -36,14 +28,14 @@ Application started. Press Ctrl+C to shut down.
 ==== Execute
 [source,]
 ----
--> http -f localhost:8080/solveMaze file@../input/maze1.txt
+http -f localhost:8080/solveMaze file@../input/maze1.txt
 ----
 ==== To see the solution map nicely formatted (in *nix terminals)
 . Install https://stedolan.github.io/jq/download/[jq]
 . Execute 
 [source,]
 ----
--> http -f localhost:8080/solveMaze file@../input/maze1.txt | jq -r '.solution'
+http -f localhost:8080/solveMaze file@../input/maze1.txt | jq -r '.solution'
 ----
 
 === curl
@@ -51,14 +43,14 @@ Application started. Press Ctrl+C to shut down.
 ==== Execute
 [source,]
 ----
--> curl -F "file=@../input/maze1.txt" localhost:8080/solveMaze
+curl -F "file=@../input/maze1.txt" localhost:8080/solveMaze
 ----
 ==== To see the solution map nicely formatted (in *nix terminals)
 . Install https://stedolan.github.io/jq/download/[jq]
 . Execute 
 [source,]
 ----
--> curl -F "file=@../input/maze1.txt" localhost:8080/solveMaze | jq -r '.solution'
+curl -F "file=@../input/maze1.txt" localhost:8080/solveMaze | jq -r '.solution'
 ----
 
 === Postman
