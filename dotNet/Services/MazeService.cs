@@ -224,7 +224,7 @@ namespace dotNet.Services {
             for (int i = 0; i < map.Length; i++) {
                 sb.Append (new string(map[i]));
                 if (i < map.Length - 1) {
-                    sb.Append (CR_NL);
+                    sb.Append (Environment.NewLine);
                 }
             }
 
