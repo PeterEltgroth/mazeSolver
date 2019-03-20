@@ -70,40 +70,6 @@ Application started. Press Ctrl+C to shut down.
 == Run with Minikube
 Coming soon
 
-=== Install https://kubernetes.io/docs/tasks/tools/install-minikube/[Minikube]
-. https://kubernetes.io/docs/tasks/tools/install-minikube/#install-a-hypervisor[Hypervisor]
-. https://kubernetes.io/docs/tasks/tools/install-minikube/#install-kubectl[kubectl]
-. https://kubernetes.io/docs/tasks/tools/install-minikube/#install-minikube[Minikube]
-
-=== Building
-==== Install https://www.docker.com/products/docker-desktop[Docker]
-==== Confirm installation
-[source,bash]
-----
--> docker --version
-Docker version 18.09.2, build 6247962
-----
-==== Create Docker image:
-[source,bash]
-----
--> docker build -t dotnet-maze-solver .
-----
-==== Setup the environment so `minikube` knows about the local`docker`
-[source,bash]
-----
--> eval $(minikube docker-env)
-----
-==== Create the Kubernetes deployment
-----
--> kubectl create -f deployment.yaml
-----
-==== Check the deployment
-----
--> kubectl get deployments
-----
-
-
-=== Run
 
 == References
 === Algorithm
