@@ -16,19 +16,10 @@ namespace dotNet.Controllers {
   [Route ("solveMaze")]
   [ApiController]
   public class MazeController : ControllerBase {
-    const string IS_NOT_IMPLEMENTED = " is not implemented.";
-
     private IMazeService _mazeService;
 
     public MazeController(IMazeService mazeService) {
       this._mazeService = mazeService;
-    }
-
-    // GET solveMaze
-    [HttpGet]
-    public ActionResult<string> Get () {
-      return Ok($"GET {IS_NOT_IMPLEMENTED}");
-      // return NotFound ();
     }
 
     // POST solveMaze

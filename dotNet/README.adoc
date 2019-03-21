@@ -71,5 +71,5 @@ Coming soon
 . http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#S7[Amit Patel: A*’s Use of the Heuristic]
 
 === Deployment
-. https://itnext.io/running-asp-net-core-on-minikube-ad69472c4c95[Running ASP.NET Core on minikue]
+. https://itnext.io/running-asp-net-core-on-minikube-ad69472c4c95[Running ASP.NET Core on minikube]
 . https://docs.docker.com/engine/examples/dotnetcore/[Dockerize a .Net Core application]
