@@ -21,6 +21,24 @@ dotnet --version
 dotnet run
 ----
 
+== Response
+=== If a solution is found
+[source,json]
+----
+{
+    "solution": "##########\n#A@@.#...#\n#.#@##.#.#\n#.#@##.#.#\n#.#@@@@#B#\n#.#.##@#@#\n#....#@@@#\n##########",
+    "steps": 15
+}
+----
+=== If no solution exists
+[source,json]
+----
+{
+    "info": "Maze has no solution!",
+    "original": "##########\n#A...#...#\n#.#.##.#.#\n#.#.##.###\n#.#....#B#\n#.#.####.#\n#....#...#\n##########"
+}
+----
+
 == Hitting the API
 
 === HTTPie
@@ -36,6 +54,18 @@ http -f localhost:8080/solveMaze file@../input/maze1.txt
 [source,]
 ----
 http -f localhost:8080/solveMaze file@../input/maze1.txt | jq -r '.solution'
+----
+results in:
+[source,]
+----
+##########
+#A@@.#...#
+#.#@##.#.#
+#.#@##.#.#
+#.#@@@@#B#
+#.#.##@#@#
+#....#@@@#
+##########
 ----
 
 === curl
